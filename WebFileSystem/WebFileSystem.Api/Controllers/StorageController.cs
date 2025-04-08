@@ -1,8 +1,10 @@
-﻿namespace WebFileSystem.Api.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 
-[Route("api/storage")]
-[ApiController]
-
-public class StorageController : ControllerBase
+namespace WebFileSystem.Api.Controllers
 {
+    [Route("api/storage")]
+    [ApiController]
+    public class StorageController : ControllerBase
+    {
+    }
 }
