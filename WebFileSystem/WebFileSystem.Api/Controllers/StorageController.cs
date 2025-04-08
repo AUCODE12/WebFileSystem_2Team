@@ -6,5 +6,11 @@ namespace WebFileSystem.Api.Controllers
     [ApiController]
     public class StorageController : ControllerBase
     {
+
+        [HttpGet("get")]
+        public string Rettt()
+        {
+            return "salom";
+        }
     }
 }
