@@ -11,9 +11,9 @@ public class StorageService : IStorageService
         StorageBrokerService = storageBrokerService;
     }
 
-    public Task CreateDirectoryAsync(string directoryPath)
+    public async Task CreateDirectoryAsync(string directoryPath)
     {
-        StorageBrokerService.CreateDirectoryAsync(directoryPath);
+        await StorageBrokerService.CreateDirectoryAsync(directoryPath);
     }
 
     public Task DeleteDirectoryAsync(string directoryPath)
