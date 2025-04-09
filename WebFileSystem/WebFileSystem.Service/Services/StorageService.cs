@@ -13,7 +13,7 @@ public class StorageService : IStorageService
 
     public Task CreateDirectoryAsync(string directoryPath)
     {
-        throw new NotImplementedException();
+        StorageBrokerService.CreateDirectoryAsync(directoryPath);
     }
 
     public Task DeleteDirectoryAsync(string directoryPath)
