@@ -1,4 +1,7 @@
-﻿namespace WebFileSystem.StorageBroker.Services;
+﻿using System.IO;
+using System.IO.Compression;
+
+namespace WebFileSystem.StorageBroker.Services;
 
 public class LocalStorageBrokerService : IStorageBrokerService
 {
@@ -7,52 +10,97 @@ public class LocalStorageBrokerService : IStorageBrokerService
     public LocalStorageBrokerService()
     {
         Data = Path.Combine(Directory.GetCurrentDirectory(), "data");
-        
+
         if (!Directory.Exists(Data))
         {
             Directory.CreateDirectory(Data);
         }
     }
 
-    public Task CreateDirectoryAsync(string directoryPath)
+    public async Task CreateDirectoryAsync(string directoryPath)
     {
-        // Bizda Data degan asosiy folder bor o'shani ichida papka yaralishi kerak, directoryPath bu yaraladigan folder nomi 
-        throw new NotImplementedException();
+        directoryPath = directoryPath ?? string.Empty;
+        directoryPath = Path.Combine(Data, directoryPath);
+        var parent = Directory.GetParent(directoryPath);
+        if (!Directory.Exists(parent.FullName))
+        {
+            throw new Exception("Parent folder not found");
+        }
+        Directory.CreateDirectory(directoryPath);
     }
 
-    public Task DeleteDirectoryAsync(string directoryPath)
+    public async Task DeleteDirectoryAsync(string directoryPath)
     {
-        // shu Datani ichida bitta directory nomi keladi o'shani o'chirish kerak
-        throw new NotImplementedException();
+        directoryPath = Path.Combine(Data, directoryPath);
+        if (!Directory.Exists(directoryPath))
+        {
+            throw new Exception("not found folder");
+        }
+        Directory.Delete(directoryPath);
     }
 
-    public Task DeleteFileAsync(string filePath)
+    public async Task DeleteFileAsync(string filePath)
     {
-        // shu Datani ichidagi file nomi keladi masalan car.jpg o'shni o'chirish kerak
-        throw new NotImplementedException();
+        filePath = Path.Combine(Data, filePath);
+        if (!File.Exists(filePath))
+        {
+            throw new Exception($"{filePath} does not exist.");
+        }
+        File.Delete(filePath);
     }
 
-    public Task<Stream> DownloadFileAsync(string filePath)
+    public async Task<Stream> DownloadFileAsync(string filePath)
     {
-        // shu data ichidagi file nomi keladi o'shini download qilish kerak
-        throw new NotImplementedException();
+        filePath = Path.Combine(Data, filePath);
+        if (!File.Exists(filePath))
+        {
+            throw new Exception("not found file");
+        }
+        var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        return stream;
     }
 
-    public Task<Stream> DownloadFolderAsZipAsync(string directoryPath)
+    public async Task<Stream> DownloadFolderAsZipAsync(string directoryPath)
     {
-        //data ichida papka nomi kaladi papkani zip qilib download qilish kerak
-        throw new NotImplementedException();
+        if (Path.GetExtension(directoryPath) != string.Empty)
+        {
+            throw new Exception("Directory not found directory");
+        }
+        directoryPath = Path.Combine(Data, directoryPath);
+        if (!Directory.Exists(directoryPath))
+        {
+            throw new Exception("file exists");
+        }
+        var zipPath = directoryPath + ".zip";
+        ZipFile.CreateFromDirectory(directoryPath, zipPath);
+        var result = new FileStream(zipPath, FileMode.Open, FileAccess.Read);
+        return result;
     }
 
-    public Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
+    public async Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
     {
-        // directoryPath da kelayotgan papka ichida nima bo'lsa ham hammasni nomini chiqarishi kerak
-        throw new NotImplementedException();
+        directoryPath = Path.Combine(Data, directoryPath);
+        var parent = Directory.GetParent(directoryPath);
+        if (!Directory.Exists(parent.FullName))
+        {
+            throw new Exception($"{directoryPath} is not a directory");
+        }
+        var allDirectory = Directory.GetFileSystemEntries(directoryPath).ToList();
+        allDirectory = allDirectory.Select(p => p.Remove(0, directoryPath.Length + 1)).ToList();
+        return allDirectory;
     }
 
-    public Task UploadFileAsync(string filePath, Stream stream)
+    public async Task UploadFileAsync(string filePath, Stream stream)
     {
-        // data ichiga fili upload qilish kerak stream orqalis saqlanishi kerak
-        throw new NotImplementedException();
+        filePath = Path.Combine(Data, filePath);
+        var parent = Directory.GetParent(filePath);
+        if (!Directory.Exists(parent.FullName))
+        {
+            throw new Exception("folder not found");
+        }
+        using (var uloadedLocation = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        {
+            stream.CopyTo(uloadedLocation);
+        }
     }
 }
