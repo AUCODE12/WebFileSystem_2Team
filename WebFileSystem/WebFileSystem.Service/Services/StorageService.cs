@@ -16,33 +16,36 @@ public class StorageService : IStorageService
         await StorageBrokerService.CreateDirectoryAsync(directoryPath);
     }
 
-    public Task DeleteDirectoryAsync(string directoryPath)
+    public async Task DeleteDirectoryAsync(string directoryPath)
     {
-        throw new NotImplementedException();
+        await StorageBrokerService.DeleteDirectoryAsync(directoryPath);
     }
 
-    public Task DeleteFileAsync(string filePath)
+    public async Task DeleteFileAsync(string filePath)
     {
-        throw new NotImplementedException();
+        await StorageBrokerService.DeleteFileAsync(filePath);
     }
 
-    public Task<Stream> DownloadFileAsync(string filePath)
+    public async Task<Stream> DownloadFileAsync(string filePath)
     {
-        throw new NotImplementedException();
+        var res = await StorageBrokerService.DownloadFileAsync(filePath);
+        return res;
     }
 
-    public Task<Stream> DownloadFolderAsZipAsync(string directoryPath)
+    public async Task<Stream> DownloadFolderAsZipAsync(string directoryPath)
     {
-        throw new NotImplementedException();
+        var res = await StorageBrokerService.DownloadFolderAsZipAsync(directoryPath);
+        return res;
     }
 
-    public Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
+    public async Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
     {
-        throw new NotImplementedException();
+        var res = await StorageBrokerService.GetAllFilesAndDirectoriesAsync(directoryPath);
+        return res;
     }
 
-    public Task UploadFileAsync(string filePath, Stream stream)
+    public async Task UploadFileAsync(string filePath, Stream stream)
     {
-        throw new NotImplementedException();
+        await StorageBrokerService.UploadFileAsync(filePath, stream);
     }
 }
