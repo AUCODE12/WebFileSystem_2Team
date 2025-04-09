@@ -1,3 +1,6 @@
+using WebFileSystem.Service.Services;
+using WebFileSystem.StorageBroker.Services;
+
 namespace WebFileSystem.Api;
 
 public class Program
@@ -10,6 +13,9 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddScoped<IStorageBrokerService, LocalStorageBrokerService>();
+        builder.Services.AddScoped<IStorageService, StorageService>();
 
         var app = builder.Build();
 
