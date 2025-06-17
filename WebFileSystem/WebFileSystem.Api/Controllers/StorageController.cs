@@ -52,6 +52,44 @@ public class StorageController : ControllerBase
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Ushbu endpoint foydalanuvchidan fayl va kategoriya nomini qabul qilib, faylni mos kategoriya papkasiga saqlaydi.
+    /// Misol: POST /api/storage/uploadByCategory?category=Images
+    /// Fayl "wwwroot/{category}" ichiga yuklanadi. Agar papka mavjud bo‘lmasa — avtomatik yaratiladi.
+    /// Yuklangan faylning to‘liq URL manzili javob sifatida qaytariladi.
+    /// Bu metod fayllarni bo‘limlarga ajratib saqlash uchun juda foydali.
+    /// </summary>
+
+    [HttpPost("uploadByCategory")]
+    public async Task<IActionResult> UploadFileByCategory(IFormFile file, string category)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("Fayl yuborilmadi ❌");
+
+        // Kategoriyaga qarab wwwroot ichida papka yaratamiz
+        string categoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", category);
+
+        if (!Directory.Exists(categoryPath))
+            Directory.CreateDirectory(categoryPath);
+
+        string filePath = Path.Combine(categoryPath, file.FileName);
+
+        using (var stream = file.OpenReadStream())
+        {
+            await StorageService.UploadFileAsync(filePath, stream);
+        }
+
+        string fileUrl = $"{Request.Scheme}://{Request.Host}/{category}/{file.FileName}";
+
+        return Ok(new
+        {
+            Message = "✅ Fayl yuklandi",
+            Category = category,
+            FileName = file.FileName,
+            Url = fileUrl
+        });
+    }
+
     [HttpPost("createFolder")]
     public async Task CreateFolder(string folderPath)
     {
