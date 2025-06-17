@@ -94,8 +94,31 @@ public class StorageController : ControllerBase
     public async Task CreateFolder(string folderPath)
     {
         throw new NotImplementedException();
-    }    
-    
+    }
+
+
+    // Bu metod berilgan fayl turiga qarab (masalan: jpg, png, txt) 
+    // wwwroot papkasi ichidagi fayllarni qidiradi va faqat shu turdagilarni chiqaradi.
+    // Masalan, agar "jpg" bersang, faqat .jpg fayllarni qaytaradi.
+    // directoryPath orqali qaysi papkadan qidirish kerakligini ko‘rsatish mumkin.
+    // Agar directoryPath berilmasa, wwwrootning o‘zi olinadi.
+
+
+    [HttpGet("filterByType")]
+    public async Task<IActionResult> FilterFilesByType(string type, string? directoryPath)
+    {
+
+        string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        string fullPath = string.IsNullOrEmpty(directoryPath)
+            ? rootPath
+            : Path.Combine(rootPath, directoryPath);
+        var files = await StorageService.GetAllFilesAndDirectoriesAsync(fullPath);
+        var filteredFiles = files
+            .Where(file => file.EndsWith($".{type}", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return Ok(filteredFiles);
+    }
     [HttpGet("getAll")]
     public async Task<List<string>> GetAllInFolderPath(string? directoryPath)
     {
