@@ -36,13 +36,22 @@ public class StorageService : IStorageService
         throw new NotImplementedException();
     }
 
-    public Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
+    //public Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
+    //{
+    //    throw new NotImplementedException();
+    //}
+    public async Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
     {
-        throw new NotImplementedException();
+        return await StorageBrokerService.GetAllFilesAndDirectoriesAsync(directoryPath);
     }
 
-    public Task UploadFileAsync(string filePath, Stream stream)
+    //public Task UploadFileAsync(string filePath, Stream stream)
+    //{
+    //    throw new NotImplementedException();
+    //}
+    public async Task UploadFileAsync(string filePath, Stream stream)
     {
-        throw new NotImplementedException();
+        await StorageBrokerService.UploadFileAsync(filePath, stream);
     }
+
 }
