@@ -137,6 +137,26 @@ public class StorageController : ControllerBase
         throw new NotImplementedException();
     }
 
+    // Bu metod berilgan kategoriya (masalan: Images) uni ichida yuklangan file bilan uchirib yuboradi
+    // fileName - o‘chiriladigan fayl nomi.
+    // category - fayl joylashgan papka (wwwroot ichida).
+
+    [HttpDelete("deleteByCategory")]
+    public async Task<IActionResult> DeleteByCategory(string category)
+    {
+        string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", category);
+
+        if (Directory.Exists(directoryPath))
+        {
+            Directory.Delete(directoryPath, recursive: true); // recursive true bo‘lsa ichidagi fayllarni ham o‘chiradi
+            return Ok($"'{category}' nomli kategoriya (papka) o‘chirildi.");
+        }
+        else
+        {
+            return NotFound($"'{category}' nomli kategoriya topilmadi.");
+        }
+    }
+
     [HttpDelete("deleteFile")]
     public async Task DeleteFile(string filePath)
     {
