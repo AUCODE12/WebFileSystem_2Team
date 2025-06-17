@@ -15,4 +15,8 @@
     <ProjectReference Include="..\WebFileSystem.Service\WebFileSystem.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
