@@ -40,8 +40,7 @@ public class StorageService : IStorageService
 
     public async Task<List<string>> GetAllFilesAndDirectoriesAsync(string directoryPath)
     {
-        var res = await StorageBrokerService.GetAllFilesAndDirectoriesAsync(directoryPath);
-        return res;
+        return await StorageBrokerService.GetAllFilesAndDirectoriesAsync(directoryPath);
     }
 
     public async Task UploadFileAsync(string filePath, Stream stream)

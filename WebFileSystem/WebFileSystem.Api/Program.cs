@@ -27,6 +27,10 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        //  wwwroot ichidagi static fayllarga kirish uchun ruxsat berildi
+        app.UseStaticFiles(); // uploads, images, css, js kabi fayllar uchun
+
         app.UseAuthorization();
         app.MapControllers();
         app.Run();
